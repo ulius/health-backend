@@ -1,0 +1,22 @@
+group 'me.ulius'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'scala'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.12.4',
+            "org.scalatra:scalatra_2.12:2.6.2",
+            "org.scalatra:scalatra-json_2.12:2.6.2",
+            "org.eclipse.jetty:jetty-webapp:9.2.15.v20160210"
+
+    compile group: 'org.json4s', name: 'json4s-jackson_2.12', version: '3.6.0-M2'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
