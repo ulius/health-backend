@@ -1,0 +1,1 @@
+https://github.com/underscoreio/essential-slick-code/blob/3.2/chapter-03/src/main/scala/main.scala

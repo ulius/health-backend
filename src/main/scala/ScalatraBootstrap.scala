@@ -1,31 +1,26 @@
 
-import org.scalatra.LifeCycle
 import javax.servlet.ServletContext
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import slick.jdbc.PostgresProfile.api._
 import grizzled.slf4j.Logger
-
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
 import me.ulius.health.FoodsServlet
-import me.ulius.health.model.MessageTable
+import me.ulius.health.model.{FoodTable, Seed}
+//import me.ulius.health.model.FoodTable
+import org.scalatra.LifeCycle
+import slick.jdbc.PostgresProfile.api._
+
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 class ScalatraBootstrap extends LifeCycle {
 
   private val log = Logger[this.type]
   private val db = Database.forConfig("database")
 
+  val foods = TableQuery[FoodTable]
+  exec(foods.schema.create)
+  exec(foods ++= Seed.food())
+
   override def init(context: ServletContext) {
-
-
-//    log.info(
-//      exec(
-//        messages.filter(_.sender === "Uli").result
-//      )
-//    )
-
-
     context.mount(new FoodsServlet(db) , "/*")
   }
 

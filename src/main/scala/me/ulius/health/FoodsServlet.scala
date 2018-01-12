@@ -1,11 +1,15 @@
 package me.ulius.health
 
-import me.ulius.health.model.{Food, MessageTable, Ounce, Teaspoon}
+import me.ulius.health.model.ServingSize.{Ounce, Teaspoon}
+import me.ulius.health.model.{Food, FoodTable, MessageTable}
 import org.scalatra._
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
 import org.slf4j.{Logger, LoggerFactory}
 import slick.jdbc.PostgresProfile.api._
+
+import scala.concurrent.duration._
+import scala.concurrent.Await
 
 class FoodsServlet(db: Database)
   extends ScalatraServlet
@@ -15,7 +19,7 @@ class FoodsServlet(db: Database)
   private val logger =  LoggerFactory.getLogger(getClass)
   implicit val executor = scala.concurrent.ExecutionContext.Implicits.global
 
-  private val messages = TableQuery[MessageTable]
+  private val foods = TableQuery[FoodTable]
 
   before() {
     contentType = formats("json")
@@ -28,16 +32,12 @@ class FoodsServlet(db: Database)
     response.setHeader("Access-Control-Allow-Origin", "*")
   }
 
-  get("/foods/:food") {
-    db.run(
-      messages.filter(_.sender === params("food")).result
+  get("/foods") {
+    val result = Await.result(
+      db.run(foods.result), 2.seconds
     )
+    result
   }
 
-  private val foods = Seq(
-    Food("Chicken breast (baked)", 5.61f, 0f, 1.47f, Ounce, 1f),
-    Food("Carlson's Fish Oil", 0f, 0f, 4.5f, Teaspoon, 1f),
-
-  )
 }
 

@@ -1,6 +1,6 @@
 package me.ulius.health
 
-import me.ulius.health.model.{Message, MessageTable}
+//import me.ulius.health.model.{Food, FoodTable, Message, MessageTable}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import slick.jdbc.PostgresProfile.api._
@@ -15,6 +15,8 @@ object App {
 
   def main(args: Array[String]): Unit = {
     JettyLauncher.launch()
+
+
 
 //    val messages = TableQuery[MessageTable]
 
@@ -40,14 +42,19 @@ object App {
 
 
 
+
+
+
   }
 
-  private val data = Seq(
-    Message("Alfred", "Message 1"),
-    Message("Uli", "Message 2"),
-    Message("Alfred", "Message 3"),
-    Message("Uli", "Message 4"),
-  )
+//  def populate[T](table: TableQuery[T]): DBIOAction[Option[Int], NoStream,Effect.All] = {
+//    for {
+//      //Drop table if it already exists, then create the table:
+//      _ <- messages.schema.drop.asTry andThen messages.schema.create
+//      // Add some data:
+//      count <- messages ++= testData
+//    } yield count
+//  }
 
 //  def exec[T](action: DBIO[T]): T =
 //    Await.result(db.run(action), 2.seconds)

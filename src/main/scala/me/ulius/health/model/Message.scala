@@ -9,7 +9,9 @@ final case class Message(
   id: Long = 0L
 )
 
+
 final class MessageTable(tag: Tag) extends Table[Message](tag, "message") {
+
 
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def sender = column[String]("sender")
