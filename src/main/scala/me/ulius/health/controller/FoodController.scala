@@ -1,23 +1,20 @@
-package me.ulius.health
+package me.ulius.health.controller
 
-import me.ulius.health.model.ServingSize.{Ounce, Teaspoon}
-import me.ulius.health.model.{Food, FoodTable, MessageTable}
-import org.scalatra._
+import me.ulius.health.model._
 import org.json4s.{DefaultFormats, Formats}
+import org.scalatra._
 import org.scalatra.json._
-import org.slf4j.{Logger, LoggerFactory}
+import org.slf4j.LoggerFactory
 import slick.jdbc.PostgresProfile.api._
 
-import scala.concurrent.duration._
-import scala.concurrent.Await
-
-class FoodsServlet(db: Database)
+class FoodController(db: Database)
   extends ScalatraServlet
     with JacksonJsonSupport with CorsSupport with FutureSupport {
 
-  protected implicit val jsonFormats: Formats = DefaultFormats
-  private val logger =  LoggerFactory.getLogger(getClass)
+  private val log =  LoggerFactory.getLogger(getClass)
   implicit val executor = scala.concurrent.ExecutionContext.Implicits.global
+  protected implicit lazy val jsonFormats: Formats =
+    DefaultFormats.withBigDecimal + new ServingSizeSerializer
 
   private val foods = TableQuery[FoodTable]
 
@@ -32,11 +29,17 @@ class FoodsServlet(db: Database)
     response.setHeader("Access-Control-Allow-Origin", "*")
   }
 
-  get("/foods") {
-    val result = Await.result(
-      db.run(foods.result), 2.seconds
-    )
-    result
+  get("/") {
+    db.run(foods.result)
+  }
+
+  post("/") {
+    log.info("hey")
+    val food = parsedBody.extract[Food]
+    db.run(foods += food).onComplete(dbio => {
+      if (dbio.isSuccess) Ok()
+      if (dbio.isFailure) InternalServerError()
+    })
   }
 
 }

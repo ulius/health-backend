@@ -9,11 +9,11 @@ object Seed {
       val cols = line.split(",")
       Food(
         cols(0),
-        cols(1).toFloat,
-        cols(2).toFloat,
-        cols(3).toFloat,
+        BigDecimal(cols(1)),
+        BigDecimal(cols(2)),
+        BigDecimal(cols(3)),
         ServingSize.fromString(cols(4)),
-        cols(5).toFloat
+        BigDecimal(cols(5))
       )
     }).toSeq
   }

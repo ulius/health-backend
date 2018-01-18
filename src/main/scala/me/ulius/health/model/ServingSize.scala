@@ -1,5 +1,8 @@
 package me.ulius.health.model
 
+import org.json4s.CustomSerializer
+import org.json4s.JsonAST.{JField, JObject, JString}
+
 sealed trait ServingSize
 
 object ServingSize {
@@ -25,4 +28,13 @@ object ServingSize {
 
   }
 }
+
+class ServingSizeSerializer extends CustomSerializer[ServingSize](format => (
+  {
+    case JString(servingSize) => ServingSize.fromString(servingSize)
+  },
+  {
+    case x: ServingSize => JString(x.toString)
+  }
+))
 

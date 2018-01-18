@@ -4,11 +4,11 @@ import slick.jdbc.PostgresProfile.api._
 
 case class Food(
   name: String,
-  protein: Float,
-  carbs: Float,
-  fat: Float,
+  protein: BigDecimal,
+  carbs: BigDecimal,
+  fat: BigDecimal,
   servingSize: ServingSize,
-  amount: Float,
+  amount: BigDecimal,
   id: Long = 0L
 )
 
@@ -21,11 +21,11 @@ final class FoodTable(tag: Tag) extends Table[Food](tag, "food") {
 
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
   def name = column[String]("name")
-  def protein = column[Float]("protein")
-  def carbs = column[Float]("carbs")
-  def fat = column[Float]("fat")
+  def protein = column[BigDecimal]("protein")
+  def carbs = column[BigDecimal]("carbs")
+  def fat = column[BigDecimal]("fat")
   def servingSize = column[ServingSize]("serving_size")
-  def amount = column[Float]("amount")
+  def amount = column[BigDecimal]("amount")
 
   override def * = (name, protein, carbs, fat, servingSize, amount, id).mapTo[Food]
 }
